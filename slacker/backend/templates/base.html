@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %} | HOTEL MARTON</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.8.2/js/all.js"></script>
+    {% block head %}{% endblock %}
+</head>
+
+<body style="background: #">
+    <nav class="navbar {% block navbar-class %}{% endblock %} is-fixed-top" role="navigation"
+        aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="">
+                {% load static %}
+                <img src="{% static 'backend/logo.svg' %}" alt="MARTON HOTEL">
+            </a>
+
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false"
+                data-target="navbarBasicExample">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        {% if user.is_authenticated %}
+        <div id="navbarBasicExample" class="navbar-menu">
+            <div class="navbar-start">
+
+                <a href="{% url 'rooms-index' %}" class="navbar-item"><span class="icon"><i
+                            class="fas fa-hotel"></i></span><span>Главная</span></a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link is-arrowless"><span class="icon"><i
+                                class="fas fa-users"></i></span><span>Гости</span></a>
+                    <div class="navbar-dropdown">
+                        <a href="{% url 'guests-search' %}" class="navbar-item"><span class="icon"><i
+                                    class="fas fa-search"></i></span><span>Поиск</span></a>
+                        <a href="{% url 'guest-create' %}" class="navbar-item"><span class="icon"><i
+                                    class="fas fa-plus"></i></span><span>Добавить</span></a>
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link is-arrowless"><span class="icon"><i
+                                class="fas fa-book"></i></span><span>Бронирования</span></a>
+                    <div class="navbar-dropdown">
+                        <a href="{% url 'booking-create' %}" class="navbar-item"><span class="icon"><i
+                                    class="fas fa-plus"></i></span><span>Добавить</span></a>
+                        <a href="{% url 'booking-index' %}" class="navbar-item"><span class="icon"><i
+                                    class="fas fa-list"></i></span><span>Список</span></a>
+                    </div>
+                </div>
+
+
+                <a href="{% url 'accommodation-index' %}" class="navbar-item"><span class="icon"><i
+                            class="fas fa-user-clock"></i></span><span>Проживания</span></a>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link is-arrowless"><span class="icon"><i
+                                class="fas fa-chart-pie"></i></span><span>Отчёты</span></a>
+                    <div class="navbar-dropdown">
+                        <a href="{% url 'reports-shift-index' %}" class="navbar-item"><span>Сменный отчет</span></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="navbar-end">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link"><span class="icon"><i
+                                class="fas fa-user-circle"></i></span><span>{{ user.username }}</span></a>
+                    <div class="navbar-dropdown is-right">
+                        {% if user.is_staff %}
+                        <a href="/admin" class="navbar-item"><span class="icon"><i
+                                    class="fas fa-user-astronaut"></i></span><span>Админ-панель</span></a>
+                        {% endif %}
+                        <hr class="dropdown-divider">
+                        <a href="{% url 'logout' %}" class="navbar-item"><span class="icon"><i
+                                    class="fas fa-sign-out-alt"></i></span><span>Выйти</span></a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+    </nav>
+    <div id="section">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+
+</html>

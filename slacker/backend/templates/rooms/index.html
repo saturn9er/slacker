@@ -1,0 +1,487 @@
+{% extends 'base.html' %}
+
+{% block title %}Управление номерным фондом{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="section">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">
+                    Номерной фонд
+                </h1>
+            </div>
+            <div class="column">
+                <div class="box">
+                    <span><strong>Сейчас <span id='ct'></span></strong></span><br>
+                    <div class="info" style="font-size: 11pt">
+                        <span><strong>Всего номеров:</strong> {{ info.total_rooms }}</span><br>
+                        <span><strong>Занятых номеров:</strong> {{ info.occupied_rooms }}</span><br>
+                        <span><strong>Свободных номеров:</strong> {{ info.empty_rooms }}</span><br>
+                        <span><strong>Номеров на уборке:</strong> {{ info.cleaning_rooms }}</span><br>
+                        <span><strong>Номеров на ремонте:</strong> {{ info.repair_rooms }}</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tabs is-centered">
+            <ul>
+                <li onclick="openTab(event, 'all')" class="tab is-active"><a>Все</a></li>
+                {% for room_type in room_types %}
+                <li onclick="openTab(event, '{{ room_type.id }}')" class="tab"><a>{{ room_type.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="content-tab" id="all">
+            <div class="columns is-multiline">
+
+                {% for room in rooms %}
+                {% if room.status == 'EPT' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-door-open" style="color: rgb(40, 139, 40);"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-ruble-sign"></i></span>
+                                <span>
+                                    <b>{{ room.daily_price }} / {{ room.hourly_price }}</b>
+                                </span>
+                            </span>
+
+                        </div>
+                        <div class="buttons">
+                            <a class="button is-small is-fullwidth is-link"
+                                href="{% url 'accommodation-create' %}?room_id={{ room.id }}"> Заселить</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif room.status == 'OCP' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-door-closed" style="color:rgb(219, 76, 76);"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-history"></i></span>
+                                <span>
+                                    {{ room.status_changed_at }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="buttons">
+                            <a class="button is-small is-fullwidth"
+                                href="{{ room.current_accommodation.get_absolute_url }}">О проживании</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif room.status == 'CLN' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-broom" style="color:rgb(219, 76, 76);"></i>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-history"></i></span>
+                                <span>
+                                    {{ room.status_changed_at }}
+                                </span>
+                            </span>
+                        </div>
+
+                        <form action="{% url 'room-status-update' room.id %}?next={{request.path}}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" value="{{ room.id }}" name="room_id" hidden>
+                            <div class="select is-rounded is-small is-fullwidth">
+                                <select class="select" name="status" id="id_status" onchange="this.form.submit()">
+                                    <option value="EPT" {% if room.status == 'EPT' %}selected{% endif %}>Пусто</option>
+                                    <option value="OCP" {% if room.status == 'OCP' %}selected{% endif %}>Занято</option>
+                                    <option value="CLN" {% if room.status == 'CLN' %}selected{% endif %}>Уборка</option>
+                                    <option value="RPR" {% if room.status == 'RPR' %}selected{% endif %}>Ремонт</option>
+                                </select>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                {% elif room.status == 'RPR' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box" style="background: rgb(219, 76, 76); color: white">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle" style="color: white"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-tools" style="color: white"></i>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-history"></i></span>
+                                <span>
+                                    {{ room.status_changed_at }}
+                                </span>
+                            </span>
+                        </div>
+                        <form action="{% url 'room-status-update' room.id %}?next={{request.path}}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" value="{{ room.id }}" name="room_id" hidden>
+                            <div class="select is-rounded is-small is-fullwidth">
+                                <select class="select" name="status" id="id_status" onchange="this.form.submit()">
+                                    <option value="EPT" {% if room.status == 'EPT' %}selected{% endif %}>Пусто</option>
+                                    <option value="OCP" {% if room.status == 'OCP' %}selected{% endif %}>Занято</option>
+                                    <option value="CLN" {% if room.status == 'CLN' %}selected{% endif %}>Уборка</option>
+                                    <option value="RPR" {% if room.status == 'RPR' %}selected{% endif %}>Ремонт</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+
+        {% regroup rooms|dictsort:"room_type.id" by room_type as room_type_list %}
+
+        {% for room_type in room_type_list %}
+        <div class="content-tab" id="{{ room_type.grouper.id }}" style="display:none">
+            <div class="columns is-multiline">
+
+                {% for room in room_type.list %}
+                {% if room.status == 'EPT' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-door-open" style="color: rgb(40, 139, 40);"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-ruble-sign"></i></span>
+                                <span>
+                                    <b>{{ room.daily_price }} / {{ room.hourly_price }}</b>
+                                </span>
+                            </span>
+
+                        </div>
+                        <div class="buttons">
+                            <a class="button is-small is-fullwidth is-link" href="{% url 'accommodation-create' %}?room_id={{ room.id }}"> Заселить</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif room.status == 'OCP' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-door-closed" style="color:rgb(219, 76, 76);"></i>
+                                </div>
+                            </div>
+                        </a>
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-history"></i></span>
+                                <span>
+                                    {{ room.status_changed_at }}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="buttons">
+                            <a class="button is-small is-fullwidth"
+                                href="{{ room.current_accommodation.get_absolute_url }}">О проживании</a>
+                        </div>
+                    </div>
+                </div>
+
+                {% elif room.status == 'CLN' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-broom" style="color:rgb(219, 76, 76);"></i>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-history"></i></span>
+                                <span>
+                                    {{ room.status_changed_at }}
+                                </span>
+                            </span>
+                        </div>
+
+                        <form action="{% url 'room-status-update' room.id %}?next={{request.path}}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" value="{{ room.id }}" name="room_id" hidden>
+                            <div class="select is-rounded is-small is-fullwidth">
+                                <select class="select" name="status" id="id_status" onchange="this.form.submit()">
+                                    <option value="EPT" {% if room.status == 'EPT' %}selected{% endif %}>Пусто</option>
+                                    <option value="OCP" {% if room.status == 'OCP' %}selected{% endif %}>Занято</option>
+                                    <option value="CLN" {% if room.status == 'CLN' %}selected{% endif %}>Уборка</option>
+                                    <option value="RPR" {% if room.status == 'RPR' %}selected{% endif %}>Ремонт</option>
+                                </select>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+
+                {% elif room.status == 'RPR' %}
+
+                <div class="column is-one-fifth">
+                    <div class="box" style="background: rgb(219, 76, 76); color: white">
+                        <a href="{% url 'rooms-detail' room.id %}">
+                            <div class="level">
+                                <div class="level-item">
+                                    <span>
+                                        <h2 class="subtitle" style="color: white"><b>{{ room.name }}</b></h2>
+                                    </span>
+                                </div>
+
+                                <div class="level-item">
+                                    <i class="fas fa-2x fa-tools" style="color: white"></i>
+                                </div>
+                            </div>
+                        </a>
+
+                        <div style="margin: 5px 0 10px 0">
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-cat"></i></span><span>{{ room.room_type.name }}</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i
+                                        class="fas fa-bed"></i></span><span>{{ room.bedding_configuration.name }}
+                                    ({{ room.bedding_configuration.capacity }} чел.)</span>
+                            </span>
+                            <br>
+                            <span style="font-size: 9pt;">
+                                <span class="icon"><i class="fas fa-history"></i></span>
+                                <span>
+                                    {{ room.status_changed_at }}
+                                </span>
+                            </span>
+                        </div>
+                        <form action="{% url 'room-status-update' room.id %}?next={{request.path}}" method="POST">
+                            {% csrf_token %}
+                            <input type="text" value="{{ room.id }}" name="room_id" hidden>
+                            <div class="select is-rounded is-small is-fullwidth">
+                                <select class="select" name="status" id="id_status" onchange="this.form.submit()">
+                                    <option value="EPT" {% if room.status == 'EPT' %}selected{% endif %}>Пусто</option>
+                                    <option value="OCP" {% if room.status == 'OCP' %}selected{% endif %}>Занято</option>
+                                    <option value="CLN" {% if room.status == 'CLN' %}selected{% endif %}>Уборка</option>
+                                    <option value="RPR" {% if room.status == 'RPR' %}selected{% endif %}>Ремонт</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+        {% endfor %}
+
+
+    </div>
+
+</div>
+<script>
+    window.onload = function () {
+        display_ct();
+    }
+
+    function openTab(evt, tabName) {
+        var i, x, tablinks;
+        x = document.getElementsByClassName("content-tab");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tab");
+        for (i = 0; i < x.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace("is-active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " is-active";
+    }
+
+    function display_c() {
+        var refresh = 1000; // Refresh rate in milli seconds
+        mytime = setTimeout('display_ct()', refresh)
+    }
+
+    function display_ct() {
+        var options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric'
+        };
+        var x = new Date().toLocaleString("ru-RU", options)
+        document.getElementById('ct').innerHTML = x;
+        display_c();
+    }
+</script>
+{% endblock %}

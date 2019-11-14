@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Управление номерным фондом{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">
+                    Комната {{ room.name }}
+                </h1>
+            </div>
+        </div>
+        <div class="columns is-multiline">
+            <div class="column is-half">
+                <div class="box">
+                    <div class="columns is-multiline">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Категория</label>
+                                <span class="input is-static">{{ room.room_type }}</span>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Конфигурация</label>
+                                <span class="input is-static">{{ room.bedding_configuration }}</span>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Статус</label>
+                                <form action="{% url 'room-status-update' room.id %}?next={{request.path}}"
+                                    method="POST">
+                                    {% csrf_token %}
+                                    <input type="text" value="{{ room.id }}" name="room_id" hidden>
+                                    <div class="select is-rounded">
+                                        <select class="select" name="status" id="id_status"
+                                            onchange="this.form.submit()">
+                                            <option value="EPT" {% if room.status == 'EPT' %}selected{% endif %}>Пусто
+                                            </option>
+                                            <option value="OCP" {% if room.status == 'OCP' %}selected{% endif %}>Занято
+                                            </option>
+                                            <option value="CLN" {% if room.status == 'CLN' %}selected{% endif %}>Уборка
+                                            </option>
+                                            <option value="RPR" {% if room.status == 'RPR' %}selected{% endif %}>Ремонт
+                                            </option>
+                                        </select>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-half">
+                            <label class="label">Дневная ставка</label>
+                            <span class="input is-static"><span class="icon"><i
+                                        class="fas fa-user"></i></span><span>{{ room.daily_price }}<span class="icon"><i
+                                            class="fas fa-sm fa-ruble-sign"></i></span></span></span>
+                            <span class="input is-static"><span class="icon"><i
+                                        class="fas fa-user-friends"></i></span><span>{{ room.daily_price_two_persons }}</span><span
+                                    class="icon"><i class="fas fa-sm fa-ruble-sign"></i></span></span>
+                            <span class="input is-static"><span class="icon"><i
+                                        class="fas fa-users"></i></span><span>{{ room.daily_price_three_persons }}</span><span
+                                    class="icon"><i class="fas fa-sm fa-ruble-sign"></i></span></span>
+                        </div>
+                        <div class="column is-half">
+                            <label class="label">Почасовая ставка</label>
+                            <span class="input is-static"><span class="icon"><i
+                                        class="fas fa-user"></i></span><span>{{ room.hourly_price }}<span
+                                        class="icon"><i class="fas fa-sm fa-ruble-sign"></i></span></span></span>
+                            <span class="input is-static"><span class="icon"><i
+                                        class="fas fa-user-friends"></i></span><span>{{ room.hourly_price }}</span><span
+                                    class="icon"><i class="fas fa-sm fa-ruble-sign"></i></span></span>
+                            <span class="input is-static"><span class="icon"><i
+                                        class="fas fa-users"></i></span><span>{{ room.hourly_price_three_persons }}</span><span
+                                    class="icon"><i class="fas fa-sm fa-ruble-sign"></i></span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="box">
+                    <h2 class="subtitle">Заметки</h2>
+                    <form action="{% url 'post-room-note' room.id %}?next={{request.path}}" method="POST">
+                        {% csrf_token %}
+                        <input type="text" value="{{ room.id }}" name="room_id" hidden>
+                        <div class="field">
+                            <textarea class="textarea" rows="3" name="content"></textarea>
+                        </div>
+                        <div class="field is-grouped is-grouped-right">
+                            <div class="control">
+                                <button class="button is-rounded is-warning">Добавить</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div style="max-height: 500px; overflow: scroll; padding: 10px;">
+                        {% for note in notes %}
+                        <div class="box">
+                            <article class="media">
+                                <div class="media-content">
+                                    <div class="content">
+                                        <p>
+                                            <strong>{{ note.created_by.first_name }}
+                                                {{ note.created_by.last_name }}</strong>
+                                            <small>@{{ note.created_by.username }}</small>
+                                            <small>{{ note.created_at|date }} в {{ note.created_at|time }}</small>
+                                            <br>
+                                            {{ note.content }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </article>
+                        </div>
+                        {% empty %}
+                        <div class="box">
+                            Нет записей
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="column is-half">
+                <nav class="panel">
+                    <p class="panel-heading">Недавние проживания</p>
+                    <div style="max-height: 400px; overflow: scroll;">
+                        {% for accommodation in recent_accommodations %}
+                        <a href="{{ accommodation.get_absolute_url }}" class="panel-block" style="display: block">
+                            <div class="level">
+                                <div class="level-left">
+                                    <span class="panel-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </span>
+                                    <span><strong>{{ accommodation.check_in|date:"j E 'y" }}</strong> {{ accommodation.check_in|date:"H:i" }} - <strong>{{ accommodation.check_out|date:"j E 'y" }}</strong> {{ accommodation.check_out|date:"H:i" }}</span>
+                                </div>
+                                <div class="level-right">
+                                    {{ accommodation.cost }}
+                                    <span class="panel-icon">
+                                        <i class="fas fa-ruble-sign" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </nav>
+            </div>
+</section>
+{% endblock %}

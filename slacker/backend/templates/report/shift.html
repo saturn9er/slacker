@@ -1,0 +1,105 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>Сменный отчет</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.8.2/js/all.js"></script>
+</head>
+<style>
+    @media print {
+        @page {
+            size: landscape;
+        }
+
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            transform: scale(1);
+            font-size: 7pt;
+            padding: 0;
+            size: landscape;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    }
+</style>
+
+<body style="margin-top: -50px" onload="window.print()">
+    <div style="font-size: 16px; text-align:center;">
+        <span><b>Сменный отчет</b></span><br>
+        <span>Отель "Мартон Северная"</span><br>
+    </div>
+
+    <div style="font-size: 14px;">
+        <span>Период: {{ start }} - {{ end }}</span><br>
+        <span>Сформирован: {% now "j E Yг. в H:i:s" %}</span><br>
+        <span>Оплата:</span><br>
+        <span>Наличные - <b>{{ sum.cash|intcomma }}₽</b>; </span>
+        <span>Безнал. - <b>{{ sum.pos|intcomma }}₽</b>; </span>
+        <span>Банк. перевод - <b>{{ sum.bank|intcomma }}₽</b>.</span>
+    </div>
+
+    <div class="columns">
+        <div class="column">
+            {% regroup payments by accommodation.room as room_list %}
+
+            <table class="table is-narrow is-fullwidth">
+                <thead>
+                    <th>ID платежа</th>
+                    <th>Тип платежа</th>
+                    <th>Оплачено</th>
+                    <th>ID заселения</th>
+                    <th>Тип размещения</th>
+                    <th>Заезд</th>
+                    <th>Выезд</th>
+                </thead>
+                <tfoot>
+                    <th>ID платежа</th>
+                    <th>Тип платежа</th>
+                    <th>Оплачено</th>
+                    <th>ID заселения</th>
+                    <th>Тип размещения</th>
+                    <th>Заезд</th>
+                    <th>Выезд</th>
+                </tfoot>
+                <tbody>
+                    {% for room in room_list %}
+
+                    <tr>
+                        <td colspan="7" style="text-align: center; background-color: #eee;"><b>{{ room.grouper }}<b>
+                        </td>
+                    </tr>
+
+                    {% for payment in room.list %}
+
+                    <tr>
+                        <td>{{ payment.id }}</td>
+                        <td>{{ payment.payment_type }}</td>
+                        <td>{{ payment.amount|intcomma }}₽</td>
+                        <td>{{ payment.accommodation.id }}</td>
+                        <td>{{ payment.accommodation.accommodation_type }}</td>
+                        <td>{{ payment.accommodation.check_in }}</td>
+                        <td>{{ payment.accommodation.check_out|default_if_none:"-" }}</td>
+                    </tr>
+
+                    {% endfor %}
+
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

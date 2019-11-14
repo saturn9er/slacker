@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Вход{% endblock %}
+
+
+{% block content %}
+<section class="hero is-fullheight-with-navbar">
+    <div class="hero-body">
+        <div class="container">
+            <div class="columns">
+                {% if user.is_authenticated %}
+                <div class="column is-4 is-offset-4">
+                    <div class="notification is-warning">
+                        <p>Вы уже вошли в систему!</p>
+                    </div>
+                </div>
+                {% else %}
+                <div class="box column is-4 is-offset-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                        <div class="notification">
+                            <p style="color: #f55">Неверные идентификационные данные</p>
+                        </div>
+                        {% endif %}
+                        <div class="field">
+                            <p class="control has-icons-left has-icons-right">
+                                <input class="input" placeholder="Имя пользователя" type="text" name="username"
+                                    autofocus="" required="required" id="id_username">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-user"></i>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="field">
+                            <p class="control has-icons-left">
+                                <input class="input" placeholder="Пароль" type="password" name="password" required=""
+                                    id="id_password">
+                                <span class="icon is-small is-left">
+                                    <i class="fas fa-lock"></i>
+                                </span>
+                            </p>
+                        </div>
+                        <input type="submit" class="button is-fullwidth is-warning" value="Войти">
+                    </form>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+</section>
+{% endblock %}

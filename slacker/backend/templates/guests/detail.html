@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль гостя {{ guest.fullname }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">Профиль гостя №{{ guest.id }}</h1>
+            </div>
+        </div>
+        <div class="columns is-multiline">
+            <div class="column is-three-fifths">
+                <div class="box">
+                    <div class="control level-right">
+                        <a class="button is-small is-rounded is-outlined level-item"
+                            href="{% url 'guest-edit' guest.id %}"><span class="icon"><i
+                                    class="fas fa-edit"></i></span><span>Редактировать</span></a>
+                    </div>
+                    <span><small><strong style="color: #888;">ЛИЧНЫЕ ДАННЫЕ</strong></small></span>
+                    <div class="columns">
+                        <div class="column is-6">
+                            <div class="field">
+                                <label class="label">Имя</label>
+                                <span>{{ guest.fullname }}</span>
+                            </div>
+                        </div>
+                        <div class="column is-4">
+                            <div class="field">
+                                <label class="label">Дата рождения ({{ guest.age }})</label>
+                                <span>{{ guest.date_of_birth }}</span>
+                            </div>
+                        </div>
+                        <div class="column is-2">
+                            <div class="field">
+                                <label class="label">Пол</label>
+                                <span>{{ guest.get_sex_display }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Место рождения</label>
+                                <span>{{ guest.place_of_birth }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Место регистрации</label>
+                                <span>{{ guest.home_address }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span><small><strong style="color: #888;">ДАННЫЕ ДОКУМЕНТА</strong></small></span>
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Тип</label>
+                                <span>{{ guest.document_type.name }}</span>
+                            </div>
+                        </div>
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Номер</label>
+                                <span>{{ guest.document_number }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Дата выдачи</label>
+                                <span>{{ guest.document_issued_on|date:'d/m/Y' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Место выдачи</label>
+                                <span>{{ guest.document_issued_by }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span><small><strong style="color: #888;">КОНТАКТНЫЕ ДАННЫЕ</strong></small></span>
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Телефон</label>
+                                <span>{{ guest.phone }}</span>
+                            </div>
+                        </div>
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Email</label>
+                                <span>{{ guest.email }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span><small><strong style="color: #888;">ДАННЫЕ О ВИЗИТАХ</strong></small></span>
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Первый визит</label>
+                                <span>{{ guest.first_visit }}</span>
+                            </div>
+                        </div>
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Последний визит</label>
+                                <span>{{ guest.last_visit }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span><small><strong style="color: #888;">ДОПОЛНИТЕЛЬНО</strong></small></span>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Заметка</label>
+                                <span>{{ guest.note }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <nav class="panel">
+                    <p class="panel-heading">Последние проживания</p>
+                    <div style="height: 400px; overflow: scroll;">
+                        {% for accommodation in recent_accommodations %}
+                        <a href="{{ accommodation.get_absolute_url }}" class="panel-block" style="display: block">
+                            <div class="level">
+                                <div class="level-left">
+                                    <span class="panel-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </span>
+                                    <span><strong>{{ accommodation.check_in|date:"j E 'y" }}</strong>
+                                        {{ accommodation.check_in|date:"H:i" }} -
+                                        <strong>{{ accommodation.check_out|date:"j E 'y" }}</strong>
+                                        {{ accommodation.check_out|date:"H:i" }}</span>
+                                </div>
+                                <div class="level-right">
+                                    {{ accommodation.cost }}
+                                    <span class="panel-icon">
+                                        <i class="fas fa-ruble-sign" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </nav>
+            </div>
+</section>
+{% endblock %}

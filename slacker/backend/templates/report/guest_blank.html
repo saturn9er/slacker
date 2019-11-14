@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <title>Анкета гостя</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script defer src="https://use.fontawesome.com/releases/v5.8.2/js/all.js"></script>
+</head>
+<style>
+    @media print {
+        @page {
+            size: landscape;
+        }
+
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            transform: scale(1);
+            font-size: 9pt;
+            padding: 0;
+            size: landscape;
+        }
+
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    }
+
+    .blank-item-name {
+        font-weight: 600;
+    }
+
+    .blank-item-content {
+        text-decoration: underline;
+        padding: 0 20px 0 20px;
+    }
+
+    .blank-item-content-with-no-underline {
+        padding: 0 20px 0 20px;
+    }
+
+    .blank-item-container {
+        margin: -5px;
+    }
+</style>
+
+<body onload="window.print()">
+    <div class="columns">
+        <div class="column is-half">
+            <div class="box">
+                <div class="level-right">
+                    <div class="level-item">
+                        <span>Форма №5</span>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <span style="font-size: 24px;"><strong>Анкета</strong></span>
+                    <br>
+                    <span style="font-size: 14px;">Отель Marton Северная</span>
+                    <br>
+                    <span style="font-size: 14px;">г. Краснодар, ул. Северная 91</span>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <span>комната №<strong><u>{{ accommodation.room.name }}</u></strong></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">1. Фамилия:</span><span
+                            class="blank-item-content">{{ guest.last_name }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">2. Имя:</span><span
+                            class="blank-item-content">{{ guest.first_name }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">3. Отчетсво (при наличии)</span><span
+                            class="blank-item-content">{{ guest.patronymic|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">4. Дата рождения:</span><span
+                            class="blank-item-content">{{ guest.date_of_birth }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">5. Пол:</span><span
+                            class="blank-item-content">{{ guest.get_sex_display }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">6. Место рождения:</span><span
+                            class="blank-item-content">{{ guest.place_of_birth }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">7. Гражданство:</span><span
+                            class="blank-item-content">{{ guest.citizenship }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">8. Документ, удост. лич.:</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">вид:</span><span
+                            class="blank-item-content">{{ guest.document_type.name }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">номер:</span><span
+                            class="blank-item-content">{{ guest.document_number }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">дата выдачи:</span><span
+                            class="blank-item-content">{{ guest.document_issued_on|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">кем выдан:</span><span
+                            class="blank-item-content">{{ guest.document_issued_by|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">9. Место жительства:</span><span
+                            class="blank-item-content">{{ guest.home_address|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">10. Прибыл:</span><span
+                            class="blank-item-content">{{ accommodation.check_in }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">11. Выбыл:</span><span
+                            class="blank-item-content-with-no-underline">"_____"
+                            _____________________ 20_____г.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">12. Зарегистрирован:</span><span
+                            class="blank-item-content-with-no-underline">"_____"
+                            _____________________ 20_____г.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span>С правилами проживания, пользования бассейном и правилами
+                            электро-пожарнобезопасности и
+                            действиями при ЧС ознакомлен.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span>Передача ключа от номера третьим лицам <strong>ЗАПРЕЩЕНА!</strong></span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span><strong>КУРЕНИЕ НА ТЕРРИТОРИИ ОТЕЛЯ И КАФЕ ЗАПРЕЩЕНО!</strong></span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span>На обработку моих персональных данных согласен.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">13. Подпись гостя:</span><span
+                            class="blank-item-content-with-no-underline">________________________________</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">14. Подпись администратора:</span><span
+                            class="blank-item-content-with-no-underline">________________________________</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="column is-half">
+            <div class="box">
+                <div class="level-right">
+                    <div class="level-item">
+                        <span>Форма №5</span>
+                    </div>
+                </div>
+                <div style="text-align: center;">
+                    <span style="font-size: 24px;"><strong>Анкета</strong></span>
+                    <br>
+                    <span style="font-size: 14px;">Отель Marton Северная</span>
+                    <br>
+                    <span style="font-size: 14px;">г. Краснодар, ул. Северная 91</span>
+                </div>
+                <div class="level-right">
+                    <div class="level-item">
+                        <span>комната №<strong><u>{{ accommodation.room.name }}</u></strong></span>
+                    </div>
+                </div>
+                <div>
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">1. Фамилия:</span><span
+                            class="blank-item-content">{{ guest.last_name }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">2. Имя:</span><span
+                            class="blank-item-content">{{ guest.first_name }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">3. Отчетсво (при наличии)</span><span
+                            class="blank-item-content">{{ guest.patronymic|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">4. Дата рождения:</span><span
+                            class="blank-item-content">{{ guest.date_of_birth }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">5. Пол:</span><span
+                            class="blank-item-content">{{ guest.get_sex_display }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">6. Место рождения:</span><span
+                            class="blank-item-content">{{ guest.place_of_birth }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">7. Гражданство:</span><span
+                            class="blank-item-content">{{ guest.citizenship }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">8. Документ, удост. лич.:</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">вид:</span><span
+                            class="blank-item-content">{{ guest.document_type.name }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">номер:</span><span
+                            class="blank-item-content">{{ guest.document_number }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">дата выдачи:</span><span
+                            class="blank-item-content">{{ guest.document_issued_on|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">кем выдан:</span><span
+                            class="blank-item-content">{{ guest.document_issued_by|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">9. Место жительства:</span><span
+                            class="blank-item-content">{{ guest.home_address|default_if_none:"ОТСУТСТВУЕТ" }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">10. Прибыл:</span><span
+                            class="blank-item-content">{{ accommodation.check_in }}</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">11. Выбыл:</span><span
+                            class="blank-item-content-with-no-underline">"_____"
+                            _____________________ 20_____г.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">12. Зарегистрирован:</span><span
+                            class="blank-item-content-with-no-underline">"_____"
+                            _____________________ 20_____г.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span>С правилами проживания, пользования бассейном и правилами
+                            электро-пожарнобезопасности и
+                            действиями при ЧС ознакомлен.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span>Передача ключа от номера третьим лицам <strong>ЗАПРЕЩЕНА!</strong></span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span><strong>КУРЕНИЕ НА ТЕРРИТОРИИ ОТЕЛЯ И КАФЕ ЗАПРЕЩЕНО!</strong></span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span>На обработку моих персональных данных согласен.</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">13. Подпись гостя:</span><span
+                            class="blank-item-content-with-no-underline">________________________________</span><br>
+                    </div>
+
+                    <div class="blank-item-container">
+                        <span class="blank-item-name">14. Подпись администратора:</span><span
+                            class="blank-item-content-with-no-underline">________________________________</span><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

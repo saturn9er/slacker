@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Поиск гостей{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">
+                    Бронирования
+                </h1>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <table class="table is-fullwidth is-hoverable ">
+                    {% if bookings %}
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Номер бронирования</th>
+                            <th>Источник бронирования</th>
+                            <th>Статус</th>
+                            <th>Заезд</th>
+                            <th>Выезд</th>
+                            <th>Имя гостя</th>
+                            <th>Кол-во гостей</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Номер бронирования</th>
+                            <th>Источник бронирования</th>
+                            <th>Статус</th>
+                            <th>Заезд</th>
+                            <th>Выезд</th>
+                            <th>Имя гостя</th>
+                            <th>Кол-во гостей</th>
+                        </tr>
+                        </thead>
+                    </tfoot>
+
+                    <tbody>
+                        {% for booking in bookings %}
+                        <tr onclick="window.location.href = '{{ booking.get_absolute_url }}'" style="cursor: default;">
+                            <td>{{ booking.id }}</td>
+                            <td>{{ booking.number }}</td>
+                            <td>{{ booking.source }}</td>
+                            <td>{{ booking.get_status_display }}</td>
+                            <td>{{ booking.check_in }}</td>
+                            <td>{{ booking.check_out }}</td>
+                            <td>{{ booking.guest_name }}</td>
+                            <td>{{ booking.number_of_guests }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="box">
+                    <div class="level">
+                        <div class="level-item">
+                            Нет результатов
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <nav class="pagination is-centered">
+                    {% if bookings.has_previous %}
+                    <a class="pagination-previous"
+                        href="?page=
+                            {{ bookings.previous_page_number|stringformat:"d" }}{{ getvars }}{{ hashtag }}">Previous</a>
+                    {% else %}
+                    <a class="pagination-previous" disabled>Previous</a>
+                    {% endif %}
+                    {% if bookings.has_next %}
+                    <a class="pagination-next"
+                        href="?page={{ bookings.next_page_number|stringformat:"d" }}{{ getvars }}{{ hashtag }}">Next</a>
+                    {% else %}
+                    <a class="pagination-next" disabled>Next</a>
+                    {% endif %}
+                    <ul class="pagination-list">
+                        {% for page in bookings.paginator.page_range %}
+                        <li><a class="pagination-link{% ifequal page accommodations.number %} is-current{% endifequal %}"
+                                href="?page={{ page|stringformat:"d" }}{{ getvars }}{{ hashtag }}">{{ page|stringformat:"d" }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

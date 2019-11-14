@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Поиск гостей{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">
+                    Проживания
+                </h1>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <table class="table is-fullwidth is-hoverable ">
+                    {% if accommodations %}
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Гости</th>
+                            <th>Заезд</th>
+                            <th>Выезд</th>
+                            <th>Комната</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Гости</th>
+                            <th>Заезд</th>
+                            <th>Выезд</th>
+                            <th>Комната</th>
+                        </tr>
+                        </thead>
+                    </tfoot>
+
+                    <tbody>
+                        {% for accommodation in accommodations %}
+                        <tr onclick="window.location.href = '{{ accommodation.get_absolute_url }}'" style="cursor: default;">
+                            <td>{{ accommodation.id }}</td>
+                            <td>
+                                {% for guest in accommodation.guests.all %}
+                                {{ guest.fullname }}<br>
+                                {% endfor %}
+                            </td>
+                            <td>{{ accommodation.check_in }}</td>
+                            <td>{{ accommodation.check_out  }}</td>
+                            <td>{{ accommodation.room.name }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="box">
+                    <div class="level">
+                        <div class="level-item">
+                            Нет результатов
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <nav class="pagination is-centered">
+                    {% if accommodations.has_previous %}
+                    <a class="pagination-previous" href="?page=
+                            {{ accommodations.previous_page_number|stringformat:"d" }}{{ getvars }}{{ hashtag }}">Previous</a>
+                    {% else %}
+                    <a class="pagination-previous" disabled>Previous</a>
+                    {% endif %}
+                    {% if accommodations.has_next %}
+                    <a class="pagination-next"
+                        href="?page={{ accommodations.next_page_number|stringformat:"d" }}{{ getvars }}{{ hashtag }}">Next</a>
+                    {% else %}
+                    <a class="pagination-next" disabled>Next</a>
+                    {% endif %}
+                    <ul class="pagination-list">
+                        {% for page in accommodations.paginator.page_range %}
+                        <li><a class="pagination-link{% ifequal page accommodations.number %} is-current{% endifequal %}"
+                                href="?page={{ page|stringformat:"d" }}{{ getvars }}{{ hashtag }}">{{ page|stringformat:"d" }}</a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Редактирование профиля гостя №{{ guest.id }}{% endblock %}
+
+{% block head %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="{% static 'backend/mask/dist/jquery.mask.min.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">Редактирование профиля гостя #{{ guest.id }}</h1>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <form method="post">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                        <div class="notification is-danger">
+                            Ошибка
+                        </div>
+                        {% endif %}
+                        {% for error in form.errors %}
+                        <div class="notification is-danger">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                        <span><small><strong style="color: #888;">ЛИЧНЫЕ ДАННЫЕ</strong></small></span>
+                        <div class="columns">
+                            <div class="column is-one-third">
+                                <div class="field">
+                                    <label class="label">Фамилия</label>
+                                    {{ form.last_name }}
+                                </div>
+                            </div>
+                            <div class="column is-one-third">
+                                <div class="field">
+                                    <label class="label">Имя</label>
+                                    {{ form.first_name }}
+                                </div>
+                            </div>
+                            <div class="column is-one-third">
+                                <div class="field">
+                                    <label class="label">Отчество</label>
+                                    {{ form.patronymic }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column is-2">
+                                <div class="field">
+                                    <label class="label">Дата рождения</label>
+                                    {{ form.date_of_birth }}
+                                </div>
+                            </div>
+                            <div class="column is-2">
+                                <div class="field">
+                                    <label class="label">Пол</label>
+                                    <div class="select">
+                                        {{ form.sex }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-8">
+                                <div class="field">
+                                    <label class="label">Место рождения</label>
+                                    {{ form.place_of_birth }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Место регистрации</label>
+                                    {{ form.home_address }}
+                                </div>
+                            </div>
+                        </div>
+                        <span><small><strong style="color: #888;">ДАННЫЕ ДОКУМЕНТА</strong></small></span>
+                        <div class="columns">
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">Тип</label>
+                                    <div class="select">
+                                        {{ form.document_type }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-one-quarter">
+                                <div class="field">
+                                    <label class="label">Номер</label>
+                                    {{ form.document_number }}
+                                </div>
+                            </div>
+                            <div class="column is-one-quarter">
+                                <div class="field">
+                                    <label class="label">Дата выдачи</label>
+                                    {{ form.document_issued_on }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Место выдачи</label>
+                                    {{ form.document_issued_by }}
+                                </div>
+                            </div>
+                        </div>
+                        <span><small><strong style="color: #888;">КОНТАКТНЫЕ ДАННЫЕ</strong></small></span>
+                        <div class="columns">
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">Телефон</label>
+                                    {{ form.phone }}
+                                </div>
+                            </div>
+                            <div class="column is-half">
+                                <div class="field">
+                                    <label class="label">Email</label>
+                                    {{ form.email }}
+                                </div>
+                            </div>
+                        </div>
+                        <span><small><strong style="color: #888;">ДОПОЛНИТЕЛЬНО</strong></small></span>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="field">
+                                    <label class="label">Заметка</label>
+                                    {{ form.note }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="control level-right">
+                                    <input class="button is-warning level-item" type="submit" value="Сохранить">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+</section>
+<script>
+    $(document).ready(function () {
+        $('.date').mask('00.00.0000');
+        $('.phone').mask('+0(000)000-00-0099');
+    });
+</script>
+{% endblock %}

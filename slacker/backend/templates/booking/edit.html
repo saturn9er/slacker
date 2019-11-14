@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Новое бронирование{% endblock %}
+
+{% block head %}
+{% load static %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"
+    integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="{% static 'backend/mask/dist/jquery.mask.min.js' %}"></script>
+<script src="{% static 'backend/calendar/dist/js/bulma-calendar.min.js' %}"></script>
+<link rel="stylesheet" href="{% static 'backend/calendar/dist/css/bulma-calendar.min.css' %}" type="text/css"
+    media="all" />
+{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="columns">
+            <div class="column">
+                <h1 class="title">Бронирование №{{ booking.id }}</h1>
+            </div>
+        </div>
+        <div class="columns">
+            <div class="column">
+                <div class="box">
+                    <form method="post">
+                        {% if form.non_field_errors %}
+                        <div class="notification is-danger">
+                            Ошибка
+                        </div>
+                        {% endif %}
+                        {% for error in form.errors %}
+                        <div class="notification is-danger">
+                            {{ error }}
+                        </div>
+                        {% endfor %}
+                        {% csrf_token %}
+                        {{ form.non_field_errors }}
+                        <div class="columns">
+                            <div class="column is-3">
+                                <div class="field">
+                                    <label class="label">Источник</label>
+                                    <div class="select">
+                                        {{ form.source }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-3">
+                                <div class="field">
+                                    <label class="label">Номер бронирования</label>
+                                    {{ form.number }}
+                                </div>
+                            </div>
+                            <div class="column is-3">
+                                <div class="field">
+                                    <label class="label">Дата заезда</label>
+                                    {{ form.check_in }}
+                                </div>
+                            </div>
+                            <div class="column is-3">
+                                <div class="field">
+                                    <label class="label">Дата выезда</label>
+                                    {{ form.check_out }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column is-3">
+                                <div class="field">
+                                    <label class="label">Фамилия гостя</label>
+                                    {{ form.guest_name }}
+                                </div>
+                            </div>
+                            <div class="column is-2">
+                                <div class="field">
+                                    <label class="label">Кол-во гостей</label>
+                                    <div class="field has-addons">
+                                        <p class="control">
+                                            <a class="button" onclick="reduceValue('#id_number_of_guests')">-</a>
+                                        </p>
+                                        <p class="control">
+                                            {{ form.number_of_guests }}
+                                        </p>
+                                        <p class="control">
+                                            <a class="button" onclick="increaseValue('#id_number_of_guests')">+</a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-3">
+                                <div class="field">
+                                    <label class="label">Тип номера</label>
+                                    <div class="select">
+                                        {{ form.room_type }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-2">
+                                <div class="field">
+                                    <label class="label">Цена</label>
+                                    <div class="field has-addons">
+                                        <p class="control">{{ form.price }}
+                                        </p>
+                                        <p class="control">
+                                            <a class="button is-static">
+                                                <i class="fas fa-ruble-sign"></i>
+                                            </a>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-3">
+                                <div class="field">
+                                    <label class="label">Статус</label>
+                                    <div class="select">
+                                        {{ form.status }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column is-6">
+                                <div class="field">
+                                    <label class="label">Заметка</label>
+                                    {{ form.note }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="level-right">
+                                    <input class="button is-warning" type="submit" value="Сохранить">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+</section>
+<script>
+    function increaseValue(el) {
+        element = $(el);
+        value = parseInt(element.val());
+        maxValue = element.attr('max');
+
+        if (value < maxValue) {
+            element.val(++value);
+        }
+    }
+
+    function reduceValue(el) {
+        element = $(el);
+        value = parseInt(element.val());
+        minValue = element.attr('min');
+
+        if (value > minValue) {
+            element.val(--value);
+        }
+    }
+
+    $(document).ready(function () {
+        $('.date').mask('00.00.0000');
+    });
+</script>
+{% endblock %}
