@@ -1,3 +1,2 @@
-*.js linguist-vendored=false
-*.html linguist-vendored=false
-slacker/backend/static/* linguist-vendored=false
+* linguist-vendored
+*.py linguist-vendored=false
