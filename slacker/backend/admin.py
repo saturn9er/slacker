@@ -1,7 +1,7 @@
 from django.contrib import admin
 from .models import Room, RoomType, BeddingConfiguration, RoomNote, Guest, DocumentType, Accommodation, Booking, BookingSource, Payment
 
-# Register your models here.
+
 admin.site.site_header = "Администрирование ИС Мартон"
 admin.site.site_title = "Администрирование ИС Мартон"
 
