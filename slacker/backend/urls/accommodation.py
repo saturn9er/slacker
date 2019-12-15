@@ -9,6 +9,5 @@ urlpatterns = [
     path('check-in/', accommodation.check_in, name='accommodation-check-in'),
     path('<int:accommodation_id>/payment', accommodation.new_payment, name='accommodation-new-payment'),
     path('<int:accommodation_id>/check-out', accommodation.check_out, name='accommodation-check-out'),
-    path('<int:accommodation_id>/note', accommodation.update_note, name='accommodation-note-update'),
-    #path('<int:accommodation_id>/update/', accommodation.update, name='accommodation_id-edit'),
+    path('<int:accommodation_id>/note', accommodation.update_note, name='accommodation-note-update')
 ]
