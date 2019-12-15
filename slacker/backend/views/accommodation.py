@@ -78,11 +78,7 @@ def new_payment(request, accommodation_id):
 
     accommodation = get_object_or_404(Accommodation, pk=accommodation_id)
 
-    payment = Payment()
-    payment.payment_type = request.POST['payment_type']
-    payment.amount = request.POST['amount']
-    payment.accommodation = accommodation
-    payment.save()
+    process_payment(request, accommodation)
 
     return HttpResponseRedirect(redirect)
 
