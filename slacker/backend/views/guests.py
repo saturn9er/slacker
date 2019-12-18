@@ -22,6 +22,7 @@ def search(request):
     page = request.GET.get('page')
     guests = paginator.get_page(page)
     context = {'guests': guests}
+
     return render(request, 'guests/search.html', context)
 
 
@@ -29,6 +30,7 @@ def detail(request, guest_id):
     guest = get_object_or_404(Guest, pk=guest_id)
     recent_accommodations = Accommodation.objects.filter(guests__id=guest.id).order_by('-id')[:50]
     context = {'guest': guest, 'recent_accommodations': recent_accommodations}
+
     return render(request, 'guests/detail.html', context)
 
 
@@ -53,6 +55,7 @@ def guests_autocomplete(request):
     guests = Guest.objects.filter(
         Q(last_name__icontains=query) | Q(phone__contains=query) | Q(document_number__contains=query)).order_by('-id')[:10]
     results = []
+    
     for guest in guests:
         guest_json = {}
         guest_json['id'] = guest.id
@@ -60,4 +63,5 @@ def guests_autocomplete(request):
         guest_json['label'] = "%s (%s)" % (guest.fullname, guest.document_number)
         guest_json['discount'] = guest.personal_discount
         results.append(guest_json)
+
     return JsonResponse(results, safe=False)

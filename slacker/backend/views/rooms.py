@@ -7,6 +7,7 @@ from django.contrib import messages
 
 
 def index(request):
+
     rooms_list = Room.objects.all()
     room_types_list = RoomType.objects.all()
 
@@ -24,16 +25,20 @@ def index(request):
 
 
 def detail(request, room_id):
+
     room = get_object_or_404(Room, pk=room_id)
     status_form = StatusForm()
     notes = RoomNote.objects.filter(room_id=room.id).order_by('-created_at')[:50]
     recent_accommodations = Accommodation.objects.filter(room_id=room.id).order_by('-id')[:50]
+
     context = {'room': room, 'status_form': status_form, 'notes': notes, 'recent_accommodations': recent_accommodations}
+
     return render(request, 'rooms/detail.html', context)
 
 
 @require_POST
 def update_room_status(request, *args, **kwargs):
+
     redirect = request.GET['next']
 
     room_id = request.POST['room_id']
@@ -50,6 +55,7 @@ def update_room_status(request, *args, **kwargs):
 
 @require_POST
 def post_room_note(request, *args, **kwargs):
+    
     redirect = request.GET['next']
 
     room_id = request.POST['room_id']
